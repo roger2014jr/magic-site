@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+
+  wordpress_db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 45gfdgfFGHDFDSg456
+      MYSQL_DATABASE: magic_site
+      MYSQL_USER: magic_site
+      MYSQL_PASSWORD: asdfasdfASDF@#32
+
+  wordpress:
+    image: wordpress:latest
+    depends_on:
+      - wordpress_db
+    ports:
+      - "8000:80"
+    restart: unless-stopped
+    volumes:
+      - ./wp-content:/var/www/html/wp-content
+    environment:
+      WORDPRESS_DB_HOST: wordpress_db:3306
+      WORDPRESS_DB_USER: magic_site
+      WORDPRESS_DB_PASSWORD: asdfasdfASDF@#32
+      WORDPRESS_DB_NAME: magic_site
+      WORDPRESS_TABLE_PREFIX: mags_
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - wordpress_db
+    ports:
+      - 8181:80
+    restart: unless-stopped
+    environment:
+      PMA_HOST: wordpress_db
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: 45gfdgfFGHDFDSg456
+
+volumes:
+  db_data:
